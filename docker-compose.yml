@@ -61,8 +61,10 @@ services:
       - ./backend:/app
     restart: unless-stopped
     networks:
-
+      # default — внутрішня мережа з postgres/redis.
       default:
+      # motion-nova-shared — спільна мережа для self-hosted Dify; alias motion-backend
+      # дозволяє Dify-контейнерам звертатися до http://motion-backend:8000/mcp.
       motion-nova-shared:
         aliases:
           - motion-backend
@@ -91,6 +93,7 @@ volumes:
   redis-data:
 
 networks:
-
+  # Спільна зовнішня мережа для self-hosted Dify. Створюється вручну один раз:
+  #   docker network create motion-nova-shared
   motion-nova-shared:
     external: true
