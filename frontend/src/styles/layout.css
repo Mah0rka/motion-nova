@@ -1,0 +1,265 @@
+/* Motion Nova CRM top-navigation shell. */
+
+.crm-frame {
+  min-height: 100vh;
+  padding: 0;
+  background: var(--bg-canvas);
+}
+
+.app-shell {
+  display: grid;
+  grid-template-rows: 68px minmax(0, 1fr);
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: var(--surface-soft);
+  /* Shared container width that keeps the topbar and page content aligned. */
+  --content-max: 1440px;
+}
+
+.app-shell-wide { --content-max: var(--page-max-width); }
+
+.crm-topbar {
+  min-width: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(14px);
+}
+
+.crm-topbar-inner {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+  align-items: center;
+  gap: 24px;
+  padding: 0 32px;
+}
+
+.brand-signature {
+  display: flex;
+  min-width: 172px;
+  flex: 1 1 0;
+  align-items: center;
+  gap: 9px;
+}
+
+.brand-logo {
+  display: block;
+  width: 54px;
+  height: 46px;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.brand-copy,
+.crm-user-copy {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.brand-title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  color: var(--text-primary);
+  font-family: "Roboto", "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  line-height: 0.88;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.brand-title b {
+  display: block;
+}
+
+.brand-subtitle {
+  color: var(--text-muted);
+  font-size: 0.54rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.crm-topnav {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  flex: 0 1 auto;
+  align-items: stretch;
+  justify-content: center;
+  gap: 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.crm-topnav::-webkit-scrollbar { display: none; }
+
+.crm-nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 160ms ease;
+}
+
+.crm-nav-link:hover,
+.crm-nav-link.active { color: var(--text-primary); }
+.crm-nav-link.active::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: #315bff;
+  content: "";
+}
+
+.crm-top-actions {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.crm-icon-button {
+  display: inline-grid;
+  width: 34px;
+  min-width: 34px;
+  min-height: 34px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.crm-icon-button:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+.crm-icon-button svg { width: 15px; height: 15px; }
+.crm-menu-button { display: none; }
+
+.topbar-branch-select {
+  width: auto;
+  min-width: 136px;
+  max-width: 190px;
+  min-height: 34px;
+  border-radius: var(--radius-sm);
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: 0.82rem;
+}
+
+.crm-user-chip {
+  display: flex;
+  max-width: 180px;
+  align-items: center;
+  gap: 7px;
+  padding-left: 2px;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.crm-user-avatar {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--crm-frame);
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 800;
+}
+
+.crm-user-copy b,
+.crm-user-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.crm-user-copy b { font-size: 0.82rem; }
+.crm-user-copy small { color: var(--text-muted); font-size: 0.68rem; text-transform: lowercase; }
+.crm-user-chip > svg { width: 14px; height: 14px; color: var(--text-muted); }
+
+.shell-main {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  /* Photo backdrop replaces the old white gradient. A soft white wash keeps
+     content cards legible over the image. cover + center adapts to any screen,
+     and the default `scroll` attachment keeps the image pinned to the visible
+     area while long tables scroll over it. */
+  background-color: var(--bg-canvas);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),
+    url("/motion-nova/fon.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  padding: 20px 0 26px;
+}
+
+.content-area { max-width: var(--content-max); margin: 0 auto; padding: 0 24px; }
+.content-area-wide { max-width: var(--content-max); }
+.shell-main .screen { display: block; min-height: auto; padding: 0; }
+.shell-main .card { width: 100%; }
+
+.crm-mobile-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(17, 25, 35, 0.38);
+  backdrop-filter: blur(6px);
+}
+
+.crm-mobile-menu {
+  display: grid;
+  width: 100%;
+  gap: 16px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0 0 18px 18px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.crm-mobile-menu-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+/* Підвищена специфічність потрібна, щоб скинути gap і центрування, які
+   .crm-topnav успадковує з медіазапиту 1220px (інакше пункти меню рознесені
+   на 14px, а посилання й роздільники не на всю ширину). */
+.crm-mobile-menu .crm-topnav-mobile { display: grid; grid-template-columns: 1fr; height: auto; gap: 0; overflow: visible; }
+.crm-topnav-mobile .crm-nav-link { min-height: 44px; border-bottom: 1px solid var(--border); }
+.crm-topnav-mobile .crm-nav-link:last-child { border-bottom: 0; }
+.crm-topnav-mobile .crm-nav-link.active::after { right: auto; top: 10px; bottom: 10px; left: -8px; width: 2px; height: auto; }
+
+/* Профіль у мобільному меню. Десктопний чип ховається в медіазапитах
+   (.crm-user-copy на 1220px, .crm-user-chip на 720px), тож піднята
+   специфічність двох класів повертає його у мобільному меню. */
+.crm-user-chip.crm-mobile-user { display: flex; max-width: none; min-height: 44px; padding: 0; }
+.crm-mobile-user .crm-user-copy { display: flex; flex-direction: column; }

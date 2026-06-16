@@ -1,0 +1,17 @@
+/* Trainer and management classes workspace. */
+.classes-page { gap: 16px; }
+
+/* Row action arrow that opens the class detail modal.
+   Uses the shared `.subscription-row-arrow` button for a consistent
+   trailing chevron across all CRM tables. */
+.classes-action-cell { text-align: right; width: 1%; white-space: nowrap; }
+
+/* Detail modal content. */
+.classes-attendees-title { margin: 4px 0 0; font-size: 1.05rem; }
+.classes-attendees-grid { display: grid; gap: 8px; align-content: start; }
+.classes-completion-form { display: grid; gap: 9px; padding: 0 0 6px; }
+.classes-completion-form label { font-weight: 700; }
+.classes-completion-form textarea { width: 100%; min-width: 0; min-height: 120px; resize: vertical; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text-primary); line-height: 1.5; }
+.classes-completion-form textarea::placeholder { color: var(--text-subtle); }
+.classes-attendee-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; border-radius: var(--radius-md); }
+.classes-attendee-row p { margin: 0; }

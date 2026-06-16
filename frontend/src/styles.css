@@ -1,0 +1,20 @@
+@import "swiper/css";
+@import "swiper/css/effect-creative";
+
+/* Збирає глобальні partials у стабільному порядку каскаду без монолітного legacy entrypoint. */
+
+@import "./styles/tokens.css";
+@import "./styles/base.css";
+@import "./styles/components.css";
+@import "./styles/utilities.css";
+@import "./styles/layout.css";
+@import "./styles/dashboard.css";
+@import "./styles/subscriptions.css";
+@import "./styles/payments.css";
+@import "./styles/visits.css";
+@import "./styles/management.css";
+@import "./styles/classes.css";
+@import "./styles/marketing.css";
+@import "./styles/schedule.css";
+@import "./styles/responsive.css";
+@import "./styles/vendor/fullcalendar.css";

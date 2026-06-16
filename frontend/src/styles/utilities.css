@@ -1,0 +1,7 @@
+/* Small reusable presentation helpers shared across feature surfaces. */
+
+.empty-card {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}

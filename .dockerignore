@@ -1,0 +1,15 @@
+.git
+.gitignore
+**/.pytest_cache
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.coverage
+**/coverage
+**/node_modules
+**/dist
+**/tsconfig.tsbuildinfo
+tmp-cookies*.txt
+ts-trace.txt
+labs

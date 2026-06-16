@@ -1,0 +1,15 @@
+/* Payment feature compositions built on shared UI primitives. */
+
+.payments-summary-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.payments-subject-column {
+  min-width: 240px;
+}
+
+@media (max-width: 880px) {
+  .payments-summary-grid {
+    grid-template-columns: 1fr;
+  }
+}

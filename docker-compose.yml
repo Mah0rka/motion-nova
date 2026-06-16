@@ -1,0 +1,96 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: motion-nova-postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: fcms
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d fcms"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:8-alpine
+    container_name: motion-nova-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    container_name: motion-nova-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=development
+      - DATABASE_URL=postgresql+asyncpg://root:password@postgres:5432/fcms
+      - REDIS_URL=redis://redis:6379/0
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_REFRESH_SECRET_KEY=${JWT_REFRESH_SECRET_KEY}
+      - MCP_API_TOKEN=${MCP_API_TOKEN}
+      - MCP_PUBLIC_URL=${MCP_PUBLIC_URL:-http://localhost:8000/mcp}
+      - MCP_TOOL_TIMEOUT_SECONDS=${MCP_TOOL_TIMEOUT_SECONDS:-5}
+      - SECURE_COOKIES=false
+      - ALLOWED_ORIGINS=http://localhost:3001,http://localhost:5173
+      - RUN_DB_MIGRATIONS=true
+      - SEED_DEMO_DATA=true
+      - SERVE_FRONTEND=false
+      - UVICORN_RELOAD=true
+      - PYTHONPATH=/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    restart: unless-stopped
+    networks:
+
+      default:
+      motion-nova-shared:
+        aliases:
+          - motion-backend
+
+  frontend:
+    image: node:24-alpine
+    container_name: motion-nova-frontend
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 3001"
+    ports:
+      - "3001:3001"
+    environment:
+      - VITE_PROXY_TARGET=http://backend:8000
+      - VITE_DIFY_APP_URL=${VITE_DIFY_APP_URL:-http://localhost:8080/chatbot/pZ7MZwVa10r27DPP}
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=250
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  redis-data:
+
+networks:
+
+  motion-nova-shared:
+    external: true

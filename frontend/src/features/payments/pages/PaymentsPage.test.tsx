@@ -1,0 +1,99 @@
+import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { vi } from "vitest";
+
+import { PaymentsPage } from "./PaymentsPage";
+import { useAuthStore } from "../../auth";
+import { renderWithProviders } from "../../../test/utils";
+
+const getMyPaymentsMock = vi.fn();
+const getPaymentsMock = vi.fn();
+
+vi.mock("../../../shared/api", async () => {
+  const actual = await vi.importActual<typeof import("../../../shared/api")>("../../../shared/api");
+  return {
+    ...actual,
+    getMyPayments: () => getMyPaymentsMock(),
+    getPayments: (...args: unknown[]) => getPaymentsMock(...args)
+  };
+});
+
+describe("PaymentsPage", () => {
+  beforeEach(() => {
+    getMyPaymentsMock.mockReset();
+    getPaymentsMock.mockReset();
+  });
+
+  it("shows membership purchase history UI for clients", async () => {
+    useAuthStore.setState({
+      user: {
+        id: "client-1",
+        email: "client@example.com",
+        first_name: "Client",
+        last_name: "User",
+        role: "CLIENT",
+        phone: null,
+        created_at: "2026-03-23T00:00:00Z",
+        updated_at: "2026-03-23T00:00:00Z"
+      },
+      isAuthenticated: true,
+      isReady: true
+    });
+    getMyPaymentsMock.mockResolvedValue([
+      {
+        id: "payment-1",
+        subscription_id: "subscription-1",
+        user_id: "client-1",
+        amount: 990,
+        currency: "UAH",
+        status: "SUCCESS",
+        method: "CARD",
+        user: null,
+        created_at: "2026-03-23T00:00:00Z",
+        updated_at: "2026-03-23T00:00:00Z"
+      }
+    ]);
+
+    renderWithProviders(<PaymentsPage />);
+
+    expect((await screen.findAllByText("UAH 990")).length).toBeGreaterThan(0);
+    expect(getMyPaymentsMock).toHaveBeenCalled();
+  });
+
+  it("shows payment ledger filters for management", async () => {
+    useAuthStore.setState({
+      user: {
+        id: "admin-1",
+        email: "admin@example.com",
+        first_name: "Admin",
+        last_name: "User",
+        role: "ADMIN",
+        phone: null,
+        created_at: "2026-03-23T00:00:00Z",
+        updated_at: "2026-03-23T00:00:00Z"
+      },
+      isAuthenticated: true,
+      isReady: true
+    });
+    getPaymentsMock.mockResolvedValue([]);
+
+    renderWithProviders(<PaymentsPage />);
+
+    expect(await screen.findByLabelText("Статус")).toBeInTheDocument();
+    expect(screen.getByLabelText("Метод")).toBeInTheDocument();
+    expect(screen.getByLabelText("Період з")).toBeInTheDocument();
+    expect(screen.getByLabelText("Період по")).toBeInTheDocument();
+    expect(getPaymentsMock).toHaveBeenCalled();
+
+    fireEvent.change(screen.getByLabelText("Період з"), { target: { value: "2026-05-01" } });
+    fireEvent.change(screen.getByLabelText("Період по"), { target: { value: "2026-05-31" } });
+
+    await waitFor(() =>
+      expect(getPaymentsMock).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          startDate: new Date("2026-05-01T00:00:00").toISOString(),
+          endDate: new Date("2026-05-31T23:59:59").toISOString()
+        })
+      )
+    );
+  });
+});
