@@ -4,6 +4,14 @@ from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+def normalize_async_postgres_url(database_url: str) -> str:
+    if database_url.startswith("postgresql://"):
+        return database_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+    if database_url.startswith("postgres://"):
+        return database_url.replace("postgres://", "postgresql+asyncpg://", 1)
+    return database_url
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
@@ -73,6 +81,8 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def validate_security_defaults(self) -> "Settings":
+        self.database_url = normalize_async_postgres_url(self.database_url)
+
         insecure_values = {
             "change-me",
             "change-me-too",
