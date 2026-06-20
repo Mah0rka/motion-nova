@@ -12,7 +12,8 @@ if [ "${SEED_DEMO_DATA:-false}" = "true" ]; then
 fi
 
 UVICORN_HOST="${UVICORN_HOST:-0.0.0.0}"
-UVICORN_PORT="${UVICORN_PORT:-8000}"
+# Render (та інші PaaS) передають порт через $PORT — він має пріоритет.
+UVICORN_PORT="${PORT:-${UVICORN_PORT:-8000}}"
 UVICORN_RELOAD="${UVICORN_RELOAD:-false}"
 UVICORN_WORKERS="${UVICORN_WORKERS:-1}"
 
