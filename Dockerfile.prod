@@ -2,6 +2,12 @@ FROM node:24-alpine AS frontend-build
 
 WORKDIR /frontend
 
+# Build-time config for the frontend. Render passes the matching env var as a
+# --build-arg automatically when an ARG with the same name is declared here.
+# Vite inlines VITE_* vars during `npm run build`, so it must be present now.
+ARG VITE_DIFY_APP_URL
+ENV VITE_DIFY_APP_URL=$VITE_DIFY_APP_URL
+
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
 
