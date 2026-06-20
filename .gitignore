@@ -21,6 +21,9 @@ vitest.config.*.timestamp-*
 .env
 .env.*
 !.env.example
+# Committed: holds the public (non-secret) Dify chatbot URL baked into the
+# frontend build on Render. Vite auto-loads .env.production for `vite build`.
+!.env.production
 *.local
 
 # Logs

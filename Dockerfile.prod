@@ -2,18 +2,14 @@ FROM node:24-alpine AS frontend-build
 
 WORKDIR /frontend
 
-# Build-time config for the frontend. Render passes service env vars as Docker
-# --build-args automatically when an ARG with the same name is declared here.
-# Vite inlines VITE_* vars during `npm run build`, so the value must be present.
-ARG VITE_DIFY_APP_URL
-ENV VITE_DIFY_APP_URL=$VITE_DIFY_APP_URL
+# Build-time config for the frontend lives in the committed frontend/.env.production
+# (Vite auto-loads it during `npm run build`). Render does not reliably pass env
+# vars as Docker build args, so the committed file is the source of truth.
 
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
 
 COPY frontend/ ./
-# Diagnostic: confirms in the build log whether the build-arg actually arrived.
-RUN echo "BUILD_ARG_CHECK VITE_DIFY_APP_URL=[$VITE_DIFY_APP_URL]"
 RUN npm run build
 
 
